@@ -37,6 +37,8 @@ If MAKE would accept unquoted symbols, then the latter assignment would be clear
 
 Currently, all Logo implementations that I know use the IEEE-754 floating point format, which introduces hard-to-explain rounding errors. Why is 0.1 + 0.2 = 0.300000000000004? OK, this could also be an implementation issue, but maybe we could agree on a BigInt format with, say, 64 bits with a fixed number of decimals, maybe configurable.
 
+Terrapin Logo, for example tries to avoid confusion by defining a global :EPSILON; when comparing two floating-point numbers, they are considered equal if their absolute difference is <= the value of :EPSILON. Together with the ability to define the number of decimals in numeric output, this may be enough to hide these representational errors caused by the IEEE-754 format.
+
 ## Variables
 
 Goal: Remove the colon notation.
