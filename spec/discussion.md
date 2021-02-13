@@ -18,7 +18,7 @@ Logo converts all unquoted symbols to upper case. Strings are not case converted
 
 Currently, major Logo dialects required that constants are quoted. `MAKE "A 5` is a typical example. It is very difficult for young students to understand the meaning behind this.
 
-I suggest that certain Logo commands not require quoting. `MAKE A 5` is easier to write, to read, and to understand. This may introduce a new level of complexity for commands that may or may not accepts strings as inputs.
+I suggest that certain Logo commands not require quoting. `MAKE A 5` is easier to write, to read, and to understand. This may introduce a new level of complexity for commands that may or may not accept strings as inputs.
 
 Example: This is good code:
 
@@ -32,6 +32,10 @@ MAKE C 6  ; assign 6 to D, not C
 ```
 
 If MAKE would accept unquoted symbols, then the latter assignment would be clear (assign 6 to C). See also below for the proposal to remove colons.
+
+## Numbers
+
+Currently, all Logo implementations that I know use the IEEE-754 floating point format, which introduces hard-to-explain rounding errors. Why is 0.1 + 0.2 = 0.300000000000004? OK, this could also be an implementation issue, but maybe we could agree on a BigInt format with, say, 64 bits with a fixed number of decimals, maybe configurable.
 
 ## Variables
 
