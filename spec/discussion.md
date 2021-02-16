@@ -4,15 +4,41 @@ This file is intended to be the basis to discuss various language features, main
 
 ## Main Directive
 
-**Do not touch the core principles**. Logo will still be list-based.
+**Do not touch the core principles**. We'll try to be careful to not break backwards compatibility by adding features.
+
+## Line Continuation Characters
+
+UCBLogo defines the following line termination characters:
+
+1. The backslash, meaning that the lexer inserts a newline character and continues scanning:
+
+```
+MAKE "ROTTER\
+DAM "EUROPE
+```
+
+Creates a symbol with an embedded newline character.
+
+2. The tilde, meading that the lexer continues scanning:
+
+```
+MAKE "ROTTER~
+DAM "EUROPE
+```
+
+Creates a symbol ROTTERDAM.
+
+I propose to drop these continuation characters in favor of multiple strings and symbols.
 
 ## Symbols
 
-Valid symbol characters are limited to ASCII letters, numbers, and a few other extra characters: `._$`. Anything else? Other languages like Javascript also allow the full Unicode range of characters. Should Logo allow these characters as well?
+Valid symbol characters are any legal Unicode character, numbers, and a few other extra characters: `._$`. Anything else?
+
+Symbols in vertical bars as in `|hello world|` are legal symbols without case conversion. Such a symbol may also span multiple lines.
 
 ## Case Conversions
 
-Logo converts all unquoted symbols to upper case. Strings are not case converted.
+Logo converts all unquoted symbols to upper case. Strings are not case converted, except for the single double quote string as in "STRING.
 
 ## Quoting
 
@@ -31,7 +57,7 @@ MAKE :A 5 ; assign 5 to B
 MAKE C 6  ; assign 6 to D, not C
 ```
 
-If MAKE would accept unquoted symbols, then the latter assignment would be clear (assign 6 to C). See also below for the proposal to remove colons.
+If MAKE would accept unquoted symbols, then the latter assignment would be clear (assign 6 to C). See also below for the proposal to remove colons. See also Strings.
 
 ## Numbers
 
@@ -67,9 +93,7 @@ This is an open topic for me. In a procedure context, the meaning of MAKE is amb
 
 ## Strings
 
-Goal: Create a single string definition.
-
-Reason: Currently, Logo has up to three different string notations:
+Currently, Logo has up to three different string notations:
 
 1. Single double quote: The "STRING notation does not allow special characters, such as spaces, without having to escape them. This makes it hard to create strings, and makes it difficult to determine where strings end.
 2. Backtick notation: Terrapin Logo offers the backtick character as a string delimiter as in \`hello\`. This permits embedded spaces and other separators, and preserves case.
@@ -85,14 +109,23 @@ END
 
 Proposed change:
 
-Use either two single quotes or two double quotes. Having the choice between single and double quotes allows for non-escaped uses of double quotes in a string by using single quites as a delimiter and vice versa:
+Add a new string delimiter, two singe quotes (Terrapin could add the backtick as well). Should we allow both single quotes and backticks?
 
 ```
 'I said "two hamburgers"'
-"I said 'two hamburgers'"
+`I said 'two hamburgers'`
 ```
 
 The end of a line is not treated as a string delimiter, permitting multiline strings.
+
+For multiline strings, these two statements are equivalent:
+
+```
+MAKE "A 'One
+Two'
+MAKE "A "|One
+Two|
+```
 
 ### Embedded Variables
 
@@ -100,10 +133,10 @@ Strings can have embedded variables in the form `{NAME}` so people can output da
 
 ```
 MAKE FIRST "Michael"
-PR "Good morning, {FIRST}!"
+PR 'Good morning, {FIRST}!'
 ```
 
-Alternatively, we can adopt the Javascript syntax, with a dollar sign preceeding the curly braces as in `PR "Good morning, ${NAME}!"` to avoid confusion with the usage of curly brackets in a string.
+Alternatively, we can adopt the Javascript syntax, with a dollar sign preceeding the curly braces as in `PR 'Good morning, ${NAME}!'` to avoid confusion with the usage of curly brackets in a string.
 
 ## Variable Scope
 
